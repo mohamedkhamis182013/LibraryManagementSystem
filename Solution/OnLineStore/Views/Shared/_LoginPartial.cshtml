@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            @Html.ActionLink("You Are Logged in Click To Redirect to CP", "Index", "Book")
+        </li>
+       
+    </ul>
+}
+

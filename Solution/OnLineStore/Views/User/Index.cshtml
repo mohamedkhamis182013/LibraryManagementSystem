@@ -1,0 +1,38 @@
+﻿@model List<OnLineStore.DataModel.UserModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_ControlPanelLayout.cshtml";
+}
+
+<h2>Index</h2>
+
+               <div class="tab-pane noHrPadding col-md-12 col-sm-12 col-xs-12 ">
+                   <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                       <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                           <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                               @Html.ActionLink("Add User", "AddUser", "User", null, new { @class = "btn btn-primary pull-right", @style = "margin-top: 18px;" })
+                           </div>
+                       </div>
+                       <table id="myTable" class="table table-responsive g_table table-hover">
+                           <thead class="g_tableHeader">
+                               <tr>
+                                   <th>UserName</th>
+                                   <th>Email</th>
+                                   <th>Roles</th>
+                               </tr>
+                           </thead>
+
+                           <tbody>
+                               @foreach (var item in Model)
+                               {
+                                   <tr>
+                                       <td> @item.UserName </td>
+                                       <td> @item.Email </td>
+                                       <td> @{string Rolesstring = string.Empty; foreach (var role in item.Roles) { Rolesstring = Rolesstring + role + ','; }} @Rolesstring</td>
+                                   </tr>
+                               }
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+

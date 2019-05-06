@@ -1,0 +1,120 @@
+﻿@model List<OnLineStore.DataModel.BookModel>
+@{ ViewBag.Title = "Index"; Layout = "~/Views/Shared/_ControlPanelLayout.cshtml"; }
+<h2>Index</h2>
+
+               <div class="tab-pane noHrPadding col-md-12 col-sm-12 col-xs-12 ">
+                   <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+
+                       @if (this.User.IsInRole("Admin"))
+                       {
+                       <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                           <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                               @Html.ActionLink("Add Book", "AddEdit", "Book", new {@ID="0" }, new { @class = "btn btn-primary pull-right", @style = "margin-top: 18px;" })
+                           </div>
+                       </div>
+                       }
+                       else
+                       {
+                           <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                           <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+                               @Html.ActionLink("Request Book", "RequestBook", "Book", null, new { @class = "btn btn-primary pull-right", @style = "margin-top: 18px;" })
+                           </div>
+                       </div>
+                       }
+
+
+                       <table id="myTable" class="table table-responsive g_table table-hover">
+                           <thead class="g_tableHeader">
+                               <tr>
+                                   <th>Name</th>
+                                   <th>Category</th>
+                                   <th>Create Date</th>
+                                   <th>Last Update Date</th>
+                                   <th>Created By</th>
+                                   @if (this.User.IsInRole("Admin"))
+                                    {
+                                   <th>Edit</th>
+                                   <th>Delete</th>
+                                    }
+                               </tr>
+                           </thead>
+
+                           <tbody>
+                               @foreach (var item in Model)
+                               {
+                                   <tr>
+                                       <td> @item.Name </td>
+                                       <td> @item.CategoryName  </td>
+                                       <td> @item.CreateDate  </td>
+                                       <td> @item.LastUpdateDate  </td>
+                                       <td> @item.CreatedBy  </td>
+                                      @if (this.User.IsInRole("Admin"))
+                                      {
+                                       <td> @Html.ActionLink("Edit", "AddEdit", "Book", new { ID = @item.ID }, new { @class = "btn btn-warning" })  </td>
+                                       <td><a class="btn btn-danger DeleteBook" href="javascript:void(0)"><b>Delete</b></a></td>
+                                       }
+                                       <input type="hidden" value="@item.ID" />
+                                   </tr>
+                               }
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+@section Scripts {
+               <script>
+
+                   var DeleteBookURL = "@Url.Action("Delete","Book")";
+                   $(document).ready(function () {
+                       $("body").on("click", ".DeleteBook", function () {
+                           debugger;
+                           var currentBookId = $(this).parent().next().val();
+                           var that = $(this);
+                           ConfrimMessage("Message", "Are you sure you want to delete Book?", function () {
+
+                               $.ajax({
+                                   url: DeleteBookURL,
+                                   type: "POST",
+                                   contentType: "application/json",
+                                   data: JSON.stringify({ ID: currentBookId }),
+                                   success: function (result) {
+                                       debugger;
+                                       if (result == "0") {
+                                           AlertMessage("Warning", "Sorry you cannot delete Book Now");
+                                       } else {
+                                           AlertMessage("Message", "Book deleted successfully");
+                                           $(that).parents("tr").remove();
+                                       }
+                                   },
+                                   error: function () {
+                                       $("#MessagePopUp").find(".modal-body").html("<h4>failure in Delete your item Please try again latter</h4>");
+                                       $("#MessagePopUp").modal("show");
+                                   }
+                               });
+                           });
+                       });
+                   })
+                   function AlertMessage(HeaderTxt, BodyTxt) {
+                       $("#AlertMessage").modal("show");
+                       $("#AlertMessage").find(".modal-header").find("h2").html(HeaderTxt);
+                       $("#AlertMessage").find(".modal-body").find("h4").html(BodyTxt);
+
+                   }
+
+                   function ConfrimMessage(HeaderTxt, BodyTxt, okCallBack, CancelCallBack, OkParam, CancelParam) {
+                       $("#ConfirmMessage").modal("show");
+                       $("#ConfirmMessage").find(".modal-header").find("h2").html(HeaderTxt);
+                       $("#ConfirmMessage").find(".modal-body").find("h4").html(BodyTxt);
+
+                       $("#ConfirmMessage").find(".ConfirmOk").off("click");
+                       $("#ConfirmMessage").find(".ConfirmOk").on("click", function () {
+                           okCallBack(OkParam);
+                       });
+                       $("#ConfirmMessage").find(".ConfirmCancel").off("click");
+                       $("#ConfirmMessage").find(".ConfirmCancel").on("click", function () {
+                           CancelCallBack(CancelParam);
+                       });
+                   }
+               </script>
+}
+    
+

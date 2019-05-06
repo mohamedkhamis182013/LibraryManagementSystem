@@ -1,0 +1,44 @@
+﻿@model List<OnLineStore.DataModel.BookRequestModel>
+    @{
+        ViewBag.Title = "AllBookRequest";
+        Layout = "~/Views/Shared/_ControlPanelLayout.cshtml";
+    }
+
+    <h2>All Book Request</h2>
+    <div class="tab-pane noHrPadding col-md-12 col-sm-12 col-xs-12 ">
+        <div class="col-md-12 col-sm-12 col-xs-12 noHrPadding">
+            <table id="myTable" class="table table-responsive g_table table-hover">
+                <thead class="g_tableHeader">
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Create Date</th>
+                        <th>Status</th>
+                        <th>Requested By   </th>                    
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                        <tr>
+                            <td> @item.Name </td>
+                            <td> @item.CategoryName  </td>
+                            <td> @item.CreateDate  </td>
+                            <td> @item.StatusString  </td>
+                            <td> @item.RequestedBy  </td>
+                            @if (this.User.IsInRole("Admin"))
+                            {
+                                <td> @Html.ActionLink("Edit", "AddEdit", "Book", new { ID = @item.ID }, new { @class = "btn btn-warning" })  </td>
+                                <td><a class="btn btn-danger DeleteBook" href="javascript:void(0)"><b>Delete</b></a></td>
+                            }
+                            <input type="hidden" value="@item.ID" />
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
